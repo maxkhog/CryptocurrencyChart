@@ -12,7 +12,7 @@ export type CryproCurrencyResponse = {
   };
 };
 
-export type ChartsResponse = {
+export type HourlyExchangeVolResponse = {
   Response: string;
   Message: string;
   TimeFrom: number;
@@ -46,7 +46,7 @@ class API {
   async getHistoHour(
     currency: string,
     limit: number = 100
-  ): Promise<ChartsResponse> {
+  ): Promise<HourlyExchangeVolResponse> {
     const data = await this.fetcher(
       `${this.url}exchange/histohour?tsym=${currency}&limit=${limit}&e=Binance`
     )

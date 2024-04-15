@@ -3,15 +3,15 @@
 import React from "react";
 import API, {
   CryproCurrencyResponse,
-  ChartsResponse,
+  HourlyExchangeVolResponse,
 } from "@/app/shared/ApiService";
 import { Button, Loader } from "@/app/shared/ui";
 import Charts from "./Charts";
 import { IntervalButtons, SelectCurrency } from "@/app/feature";
 
 const App = () => {
-  const [data, setData] = React.useState<CryproCurrencyResponse | null>(null);
-  const [sourceData, setSourceData] = React.useState<ChartsResponse | null>(
+  const [currenciesData, setCurrenciesData] = React.useState<CryproCurrencyResponse | null>(null);
+  const [hourlyExchangeVolData, setHourlyExchangeVolData] = React.useState<HourlyExchangeVolResponse | null>(
     null
   );
   const [currency, setCurrency] = React.useState<string>("BTC");
@@ -21,23 +21,23 @@ const App = () => {
   React.useEffect(() => {
     API.getCryproCurrency()
       .then((data) => {
-        setData(data);
+        setCurrenciesData(data);
       })
       .finally(() => setLoading(false));
   }, []);
 
   React.useEffect(() => {
-    if (data === null) {
+    if (currenciesData === null) {
       return;
     }
     setLoading(true);
 
     API.getHistoHour(currency, interval)
       .then((data) => {
-        setSourceData(data);
+        setHourlyExchangeVolData(data);
       })
       .finally(() => setLoading(false));
-  }, [currency, interval, refresh, data]);
+  }, [currency, interval, refresh, currenciesData]);
 
   return (
     <div className="divide-y w-[800px] divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
@@ -59,7 +59,7 @@ const App = () => {
           </Button>
           <div className=" justify-self-end">
             <SelectCurrency
-              data={data?.Data ?? {}}
+              data={currenciesData?.Data ?? {}}
               currency={currency}
               setCurrency={setCurrency}
             />
@@ -69,13 +69,13 @@ const App = () => {
       <div className="px-4 py-5 sm:p-6 min-h-[480px] flex justify-center items-center">
         {loading ? (
           <Loader />
-        ) : sourceData?.Response === "Error" ? (
-          sourceData.Message
+        ) : hourlyExchangeVolData?.Response === "Error" ? (
+          hourlyExchangeVolData.Message
         ) : (
           <Charts
-            TimeFrom={sourceData?.TimeFrom}
-            TimeTo={sourceData?.TimeTo}
-            data={sourceData?.Data ?? []}
+            TimeFrom={hourlyExchangeVolData?.TimeFrom}
+            TimeTo={hourlyExchangeVolData?.TimeTo}
+            data={hourlyExchangeVolData?.Data ?? []}
           />
         )}
       </div>
