@@ -33,7 +33,7 @@ const App = () => {
   }, []);
 
   React.useEffect(() => {
-    if (currency === "") {
+    if (data === null) {
       return;
     }
     setLoading(true);
@@ -67,7 +67,7 @@ const App = () => {
         </div>
         <div className="flex flex-1 items-center justify-between">
           <Button onClick={() => setRefresh((v) => v + 1)}>Refresh</Button>
-          <div>
+          <div className=" justify-self-end">
             <select
               onChange={(e) => {
                 console.log(e.target.value);
@@ -75,12 +75,11 @@ const App = () => {
               }}
               id="currency"
               name="currency"
-              className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              defaultValue={currency}
+              className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
               value={currency}
             >
               {Object.values(data?.Data ?? {}).map(({ id, symbol }) => (
-                <option key={id} selected={symbol === currency} value={symbol}>
+                <option key={id} value={symbol}>
                   {symbol}
                 </option>
               ))}
@@ -98,10 +97,7 @@ const App = () => {
             TimeFrom={sourceData?.TimeFrom}
             TimeTo={sourceData?.TimeTo}
             data={
-              sourceData?.Data ?? [
-                { time: 0, volume: 0 },
-                { time: 1, volume: 1 },
-              ]
+              sourceData?.Data ?? []
             }
           />
         )}

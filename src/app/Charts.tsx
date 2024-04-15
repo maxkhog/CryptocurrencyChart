@@ -1,5 +1,6 @@
 "use client";
-//@ts-nocheck
+// @ts-nocheck
+/* eslint-disable */
 
 import * as d3 from "d3";
 import React from "react";
