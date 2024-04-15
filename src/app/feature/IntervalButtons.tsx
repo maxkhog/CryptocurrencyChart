@@ -26,6 +26,7 @@ export const IntervalButtons: React.FC<Props> = React.memo(
             <Button
               key={time}
               active={isActive(data)}
+              // eslint-disable-next-line react-hooks/rules-of-hooks
               onClick={React.useCallback(
                 () => setIntervalData(data),
                 [setIntervalData]

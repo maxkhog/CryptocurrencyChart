@@ -9,13 +9,6 @@ import { Button, Loader } from "@/app/shared/ui";
 import Charts from "./Charts";
 import { IntervalButtons, SelectCurrency } from "@/app/feature";
 
-const times = {
-  "1 day": 24,
-  "3 days": 24 * 3,
-  week: 24 * 7,
-  month: 24 * 31,
-};
-
 const App = () => {
   const [data, setData] = React.useState<CryproCurrencyResponse | null>(null);
   const [sourceData, setSourceData] = React.useState<ChartsResponse | null>(
