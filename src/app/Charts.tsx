@@ -62,7 +62,11 @@ const Charts = ({
         d={line(data)}
       />
       {data.length === 0 ? (
-        <text transform={`translate(${(width) / 2},${(height - marginBottom) / 2})`} >no actual data</text>
+        <text
+          transform={`translate(${width / 2},${(height - marginBottom) / 2})`}
+        >
+          no actual data
+        </text>
       ) : (
         <g fill="white" stroke="currentColor" strokeWidth="1.5">
           {data.map((d, i) => (

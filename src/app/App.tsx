@@ -4,10 +4,10 @@ import React from "react";
 import API, {
   CryproCurrencyResponse,
   ChartsResponse,
-} from "./shared/ApiService";
+} from "@/app/shared/ApiService";
+import { Button, Loader } from "@/app/shared/ui";
 import Charts from "./Charts";
-import Button from "@/app/UI/Button";
-import Loader from "@/app/UI/Loader";
+import { IntervalButtons, SelectCurrency } from "@/app/feature";
 
 const times = {
   "1 day": 24,
@@ -17,8 +17,10 @@ const times = {
 };
 
 const App = () => {
-  const [data, setData] = React.useState<CryproCurrencyResponse | null>();
-  const [sourceData, setSourceData] = React.useState<ChartsResponse | null>();
+  const [data, setData] = React.useState<CryproCurrencyResponse | null>(null);
+  const [sourceData, setSourceData] = React.useState<ChartsResponse | null>(
+    null
+  );
   const [currency, setCurrency] = React.useState<string>("BTC");
   const [interval, setIntervalData] = React.useState<number>(24);
   const [refresh, setRefresh] = React.useState<number>(0);
@@ -26,7 +28,6 @@ const App = () => {
   React.useEffect(() => {
     API.getCryproCurrency()
       .then((data) => {
-        console.log(data);
         setData(data);
       })
       .finally(() => setLoading(false));
@@ -40,50 +41,35 @@ const App = () => {
 
     API.getHistoHour(currency, interval)
       .then((data) => {
-        console.log(data);
         setSourceData(data);
       })
       .finally(() => setLoading(false));
-
-    console.log("refresh");
-  }, [currency, interval, refresh]);
+  }, [currency, interval, refresh, data]);
 
   return (
     <div className="divide-y w-[800px] divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
       <div className="px-4 py-5 sm:px-6 flex justify-around">
         <div className="flex flex-1 justify-around items-center">
-          {Object.entries(times).map(([k, v]) => {
-            return (
-              <Button
-                key={k}
-                className=""
-                active={interval === v}
-                onClick={() => setIntervalData(v)}
-              >
-                {k}
-              </Button>
-            );
-          })}
+          <IntervalButtons
+            interval={interval}
+            setIntervalData={setIntervalData}
+          />
         </div>
         <div className="flex flex-1 items-center justify-between">
-          <Button onClick={() => setRefresh((v) => v + 1)}>Refresh</Button>
+          <Button
+            onClick={React.useCallback(
+              () => setRefresh((v) => v + 1),
+              [setRefresh]
+            )}
+          >
+            Refresh
+          </Button>
           <div className=" justify-self-end">
-            <select
-              onChange={(e) => {
-                console.log(e.target.value);
-                setCurrency(e.target.value);
-              }}
-              id="currency"
-              name="currency"
-              className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              value={currency}
-            >
-              {Object.values(data?.Data ?? {}).map(({ id, symbol }) => (
-                <option key={id} value={symbol}>
-                  {symbol}
-                </option>
-              ))}
-            </select>
+            <SelectCurrency
+              data={data?.Data ?? {}}
+              currency={currency}
+              setCurrency={setCurrency}
+            />
           </div>
         </div>
       </div>
@@ -96,9 +82,7 @@ const App = () => {
           <Charts
             TimeFrom={sourceData?.TimeFrom}
             TimeTo={sourceData?.TimeTo}
-            data={
-              sourceData?.Data ?? []
-            }
+            data={sourceData?.Data ?? []}
           />
         )}
       </div>

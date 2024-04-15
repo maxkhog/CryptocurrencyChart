@@ -1,8 +1,9 @@
 import React from "react";
 
-const Button: React.FC<
+export const Button: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement> & { active?: boolean }
-> = ({ children, active = false, ...props }) => {
+> = React.memo(({ children, active = false, ...props }) => {
+  console.log('render', children)
   return (
     <button
       {...props}
@@ -12,6 +13,5 @@ const Button: React.FC<
       {children}
     </button>
   );
-};
+});
 
-export default Button;
